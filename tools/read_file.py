@@ -1,6 +1,6 @@
 read_tool = {"type": "function",
              "function":{
-                 "name": "read_file",
+                 "name": "read_tool",
                  "description": "Reads the content of a file and returns it as a string.",
                     "parameters": {
                         "type": "object",
@@ -23,6 +23,3 @@ def read_file(file_path):
     except Exception as e:
         return f"Error reading file: {e}"
     
-
-TOOL_MAPPING = {
-    "read_file": read_file}

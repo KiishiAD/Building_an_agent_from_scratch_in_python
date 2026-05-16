@@ -1,9 +1,14 @@
-from .chat import chat
+from chat import chat
 
 
 def main():
+    chat()
     
-    
+
+
+
+
+
 
 
 
