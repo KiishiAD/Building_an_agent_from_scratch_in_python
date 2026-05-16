@@ -1,11 +1,18 @@
 from openrouter import OpenRouter
 import os
 
-from read_file import TOOL_MAPPING
+from tools.read_file import TOOL_MAPPING
 
 message_list = []
 
-def chat(messages, tools:list = []):
+def chat():
+    while True:
+        user_input = input("User:")
+        if user_input.lower() in ["exit", "quit"]:
+            print("Exiting chat.")
+            break
+        message_list.append({"role": "user", "content": user_input})
+
     with OpenRouter(
         api_key=os.getenv("OPENROUTER_API_KEY")
     ) as client:
@@ -16,8 +23,9 @@ def chat(messages, tools:list = []):
             messages=messages
         )
 
-        if response.choices[0].finish_reason == "tool_calls":
-            message_list.append({"role": "assistant", "content": response.choices[0].message.content})
+        while response.choices[0].finish_reason == "tool_calls":
+            message_list.append({"role": "assistant",
+                                  "content": response.choices[0].message.content})
             tool_calls = response.choices[0].tool_calls
             for tool_call in tool_calls:
                 tool_name = tool_call.function.name
@@ -32,6 +40,8 @@ def chat(messages, tools:list = []):
 
 
     return  response.choices[0].message.content
+
+
 
 
 
