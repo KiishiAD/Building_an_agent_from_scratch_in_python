@@ -2,6 +2,7 @@ from openrouter import OpenRouter
 import os
 from tools import tools, TOOL_MAPPING
 import json
+import logging
 
 message_list = []
 MODEL = "openai/gpt-oss-120b"
@@ -21,7 +22,7 @@ def chat():
             response = client.chat.send(
                 model=MODEL,
                 tools=tools,
-                messages=message_list
+                messages=message_list,
             )
 
             while response.choices[0].finish_reason == "tool_calls":
@@ -33,6 +34,7 @@ def chat():
                 for tool_call in tool_calls:
                     tool_name = tool_call.function.name
                     tool_args = json.loads(tool_call.function.arguments)
+                    logging.info(f"Calling tool: {tool_name} with arguments: {tool_args}")
                     tool_response = TOOL_MAPPING[tool_name](**tool_args)
                     message_list.append(
                         {"role": "tool",
